@@ -1,0 +1,2907 @@
+{
+	"info": {
+		"_postman_id": "93d6d769-4aa6-41ac-b8c6-9642d1a55fd5",
+		"name": "AssessmentTodoist",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Get active tasks",
+					"item": [
+						{
+							"name": "Get active tasks",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 2xx\", function () {\r",
+											"    pm.response.to.be.success;\r",
+											"});\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test(\"The URL response parameter contains https://todoist.com\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"https://todoist.com\");\r",
+											"});\r",
+											"\r",
+											"//Validate Content-Type header is present in the response\r",
+											"pm.test(\"Content-Type is present in the response\", function () {\r",
+											"    pm.response.to.have.header(\"Content-Type\");\r",
+											"});\r",
+											"\r",
+											"//Validate Authorization header is present in the request\r",
+											"pm.test(\"Authorization is present in the request\", function () {\r",
+											"    pm.request.to.have.header(\"Authorization\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Json Schema\r",
+											"///////////////////////\r",
+											"var getActiveTaskSchema = {\r",
+											"    \"type\": \"array\",\r",
+											"    \"items\": {\r",
+											"        \"anyOf\": [\r",
+											"            {\r",
+											"                \"type\": \"object\",\r",
+											"                \"required\": [\r",
+											"                    \"id\",\r",
+											"                    \"assigner\",\r",
+											"                    \"project_id\",\r",
+											"                    \"section_id\",\r",
+											"                    \"order\",\r",
+											"                    \"content\",\r",
+											"                    \"completed\",\r",
+											"                    \"label_ids\",\r",
+											"                    \"priority\",\r",
+											"                    \"comment_count\",\r",
+											"                    \"creator\",\r",
+											"                    \"created\",\r",
+											"                    \"url\"\r",
+											"                ],\r",
+											"                \"properties\": {\r",
+											"                    \"id\": { \"type\": \"integer\" },\r",
+											"                    \"assigner\": { \"type\": \"integer\" },\r",
+											"                    \"project_id\": { \"type\": \"integer\" },\r",
+											"                    \"section_id\": { \"type\": \"integer\" },\r",
+											"                    \"order\": { \"type\": \"integer\" },\r",
+											"                    \"content\": { \"type\": \"string\" },\r",
+											"                    \"completed\": { \"type\": \"boolean\" },\r",
+											"                    \"label_ids\": { \"type\": \"array\" },\r",
+											"                    \"priority\": { \"type\": \"integer\" },\r",
+											"                    \"comment_count\": { \"type\": \"integer\" },\r",
+											"                    \"creator\": { \"type\": \"integer\" },\r",
+											"                    \"created\": { \"type\": \"string\" },\r",
+											"                    \"url\": { \"type\": \"string\" }\r",
+											"                },\r",
+											"                \"additionalProperties\": true\r",
+											"            }\r",
+											"            \r",
+											"        ]\r",
+											"\t}\r",
+											"\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Schema is valid\", function () {\r",
+											"    pm.response.to.have.jsonSchema(getActiveTaskSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to get active tasks without authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the empty token response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Empty token\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to get active tasks with invalid authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 403\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.forbidden;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Forbidden\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Forbidden\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{invalidToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to get active tasks with invalid url",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}invalid",
+									"host": [
+										"{{baseURL}}invalid"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create a new task",
+					"item": [
+						{
+							"name": "Create a new task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 2xx\", function () {\r",
+											"    pm.response.to.be.success;\r",
+											"});\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"//Validate the Task name\r",
+											"var name = pm.environment.get(\"taskName\");\r",
+											"pm.test(\"Validate the Task name\", function () {\r",
+											"    pm.expect(jsonData.content).to.eql(name);\r",
+											"});\r",
+											"\r",
+											"//Validate the Task priority\r",
+											"var priority = pm.environment.get(\"taskPriority\");\r",
+											"pm.test(\"Validate the Task priority\", function () {\r",
+											"    pm.expect(jsonData.priority).to.eql(+priority);\r",
+											"});\r",
+											"\r",
+											"//Save the id of the created task in an environment variable\r",
+											"pm.environment.set(\"taskId\", jsonData.id);\r",
+											"\r",
+											"//Validate Content-Type header is present in the response\r",
+											"pm.test(\"Content-Type is present in the response\", function () {\r",
+											"    pm.response.to.have.header(\"Content-Type\");\r",
+											"});\r",
+											"\r",
+											"//Validate X-Requested-Id header is present in the request\r",
+											"pm.test(\"X-Requested-Id is present in the request\", function () {\r",
+											"    pm.request.to.have.header(\"X-Requested-Id\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Json Schema\r",
+											"///////////////////////\r",
+											"var createTaskSchema = {\r",
+											"    \"type\": \"object\",\r",
+											"    \"required\": [\r",
+											"        \"id\",\r",
+											"        \"assigner\",\r",
+											"        \"project_id\",\r",
+											"        \"section_id\",\r",
+											"        \"order\",\r",
+											"        \"content\",\r",
+											"        \"completed\",\r",
+											"        \"label_ids\",\r",
+											"        \"priority\",\r",
+											"        \"comment_count\",\r",
+											"        \"creator\",\r",
+											"        \"created\",\r",
+											"        \"due\",\r",
+											"        \"url\"\r",
+											"    ],\r",
+											"    \"properties\": {\r",
+											"        \"id\": { \"type\": \"integer\" },\r",
+											"        \"assigner\": { \"type\": \"integer\" },\r",
+											"        \"project_id\": { \"type\": \"integer\" },\r",
+											"        \"section_id\": { \"type\": \"integer\" },\r",
+											"        \"order\": { \"type\": \"integer\" },\r",
+											"        \"content\": { \"type\": \"string\" },\r",
+											"        \"completed\": { \"type\": \"boolean\" },\r",
+											"        \"label_ids\": { \"type\": \"array\" },\r",
+											"        \"priority\": { \"type\": \"integer\" },\r",
+											"        \"comment_count\": { \"type\": \"integer\" },\r",
+											"        \"creator\": { \"type\": \"integer\" },\r",
+											"        \"created\": { \"type\": \"string\" },\r",
+											"        \"due\": {\r",
+											"            \"type\": \"object\",\r",
+											"            \"properties\": {\r",
+											"                \"recurring\": { \"type\": \"boolean\" },\r",
+											"                \"string\": { \"type\": \"string\" },\r",
+											"                \"date\": { \"type\": \"string\" },\r",
+											"                \"datetime\": { \"type\": \"string\" },\r",
+											"                \"timezone\": { \"type\": \"string\" }\r",
+											"            },\r",
+											"        },\r",
+											"        \"url\": { \"type\": \"string\" }\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Schema is valid\", function () {\r",
+											"    pm.response.to.have.jsonSchema(createTaskSchema);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{taskName}}\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": {{taskPriority}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to create a task without authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the empty token response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Empty token\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{taskName}}\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": 4\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to create a task with invalid authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 403\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.forbidden;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Forbidden\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Forbidden\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{invalidToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{taskName}}\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": 4\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to create a task with invalid url",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{taskName}}\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": 4\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}s",
+									"host": [
+										"{{baseURL}}s"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to create a task with an invalid header",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Sync item already processed. Ignored\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{taskName}}\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": {{taskPriority}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to create a task without mandatory field",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Empty content\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": {{taskPriority}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to create a task with invalid data (priority field)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Unsupported priority value\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{taskName}}\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": 123\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to create a task with an invalid json",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Bad Request\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{taskName}}\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": {{taskPriority}},\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to create a task with an empty task name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Empty content\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": {{taskPriority}}\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to create a task with an invalid data type (priority field)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"unexpected string\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"{{taskName}}\",\r\n    \"due_string\": \"tomorrow at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": \"2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}",
+									"host": [
+										"{{baseURL}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get an active task",
+					"item": [
+						{
+							"name": "Get an active tasks",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 2xx\", function () {\r",
+											"    pm.response.to.be.success;\r",
+											"});\r",
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"var jsonData = pm.response.json();\r",
+											"\r",
+											"//Validate the Task name\r",
+											"var name = pm.environment.get(\"taskName\");\r",
+											"pm.test(\"Validate the Task name\", function () {    \r",
+											"    pm.expect(jsonData.content).to.eql(name);\r",
+											"});\r",
+											"\r",
+											"//Validate the Task Id\r",
+											"var id = pm.environment.get(\"taskId\");\r",
+											"pm.test(\"Validate the Task Id\", function () {    \r",
+											"    pm.expect(jsonData.id).to.eql(+id);\r",
+											"});\r",
+											"\r",
+											"//Validate Content-Type header is present in the response\r",
+											"pm.test(\"Content-Type is present in the response\", function () {\r",
+											"    pm.response.to.have.header(\"Content-Type\");\r",
+											"});\r",
+											"\r",
+											"//Validate Authorization header is present in the request\r",
+											"pm.test(\"Authorization is present in the request\", function () {\r",
+											"    pm.request.to.have.header(\"Authorization\");\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Json Schema\r",
+											"///////////////////////\r",
+											"var getAnActiveTaskSchema = {\r",
+											"    \"type\": \"object\",\r",
+											"    \"required\": [\r",
+											"        \"id\",\r",
+											"        \"assigner\",\r",
+											"        \"project_id\",\r",
+											"        \"section_id\",\r",
+											"        \"order\",\r",
+											"        \"content\",\r",
+											"        \"completed\",\r",
+											"        \"label_ids\",\r",
+											"        \"priority\",\r",
+											"        \"comment_count\",\r",
+											"        \"creator\",\r",
+											"        \"created\",\r",
+											"        \"due\",\r",
+											"        \"url\"\r",
+											"    ],\r",
+											"    \"properties\": {\r",
+											"        \"id\": { \"type\": \"integer\" },\r",
+											"        \"assigner\": { \"type\": \"integer\" },\r",
+											"        \"project_id\": { \"type\": \"integer\" },\r",
+											"        \"section_id\": { \"type\": \"integer\" },\r",
+											"        \"order\": { \"type\": \"integer\" },\r",
+											"        \"content\": { \"type\": \"string\" },\r",
+											"        \"completed\": { \"type\": \"boolean\" },\r",
+											"        \"label_ids\": { \"type\": \"array\" },\r",
+											"        \"priority\": { \"type\": \"integer\" },\r",
+											"        \"comment_count\": { \"type\": \"integer\" },\r",
+											"        \"creator\": { \"type\": \"integer\" },\r",
+											"        \"created\": { \"type\": \"string\" },\r",
+											"        \"due\": { \"type\": \"object\", \r",
+											"\t\t\t\"required\": [\r",
+											"                \"recurring\",\r",
+											"                \"string\",\r",
+											"                \"date\",\r",
+											"                \"datetime\",\r",
+											"                \"timezone\"\r",
+											"            ],\r",
+											"            \"properties\": {\r",
+											"                \"recurring\": { \"type\": \"boolean\" },\r",
+											"                \"string\": { \"type\": \"string\" },\r",
+											"                \"date\": { \"type\": \"string\" },\r",
+											"                \"datetime\": { \"type\": \"string\" },\r",
+											"                \"timezone\": { \"type\": \"string\" }\r",
+											"            },\r",
+											"            \"additionalProperties\": true\r",
+											"        },\r",
+											"        \"url\": { \"type\": \"string\" }\r",
+											"    },\r",
+											"\t\"additionalProperties\": true\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Schema is valid\", function () {\r",
+											"    pm.response.to.have.jsonSchema(getAnActiveTaskSchema);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to get an active tasks without authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the empty token response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Empty token\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to get an active tasks with invalid authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 403\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.forbidden;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Forbidden\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Forbidden\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{invalidToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to get an active tasks with invalid url",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}s/{{taskId}}",
+									"host": [
+										"{{baseURL}}s"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to get an active tasks with non existing task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Not Found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Not Found\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}1",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to get an active tasks with too long task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Bad Request\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Bad Request\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskIdTooLong}}1",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskIdTooLong}}1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to get an active tasks with an invalid task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/-{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"-{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update a task",
+					"item": [
+						{
+							"name": "Update a task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 2xx\", function () {\r",
+											"    pm.response.to.be.success;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code is 204\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Buy Coffee\",\r\n    \"due_string\": \"tomorrow at 11:00\",\r\n    \"priority\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to update a task without authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the empty token response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Empty token\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Buy Coffee\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to update a task with invalid authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 403\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.forbidden;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Forbidden\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Forbidden\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{invalidToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Buy Coffee\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to update a task with invalid url",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Buy Coffee\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}ss/{{taskId}}",
+									"host": [
+										"{{baseURL}}ss"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to update a task with an invalid header",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Sync item already processed. Ignored\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Request-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Buy Coffee\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to update a task without any parameters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"At least one of supported fields should be set and non-empty\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to update a task with invalid data (priority field)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"unexpected number\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Buy Coffee\",\r\n    \"due_string\": \"tomorrow at 11:00\",\r\n    \"priority\": -1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to update a task with an invalid json",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Bad Request\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": \"Buy Coffee\",\r\n    \"due_string\": \"tomorrow at 11:00\",\r\n    priority: 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to update a task with an invalid data type (priority field)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"unexpected number\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Requested-Id",
+										"value": "$(uuidgen)",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\": 123,\r\n    \"due_string\": \"tomorrow at 11:00\",\r\n    \"priority\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Change a task status to complete",
+					"item": [
+						{
+							"name": "Close a task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 2xx\", function () {\r",
+											"    pm.response.to.be.success;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code is 204\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}/close",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}",
+										"close"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to close a task without authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the empty token response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Empty token\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}/close",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}",
+										"close"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to close a task with invalid authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 403\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.forbidden;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Forbidden\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Forbidden\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{invalidToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}/close",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}",
+										"close"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to close a task with invalid url",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}/closed",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}",
+										"closed"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to close a task with too long task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Invalid temporary id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Invalid temporary id\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskIdTooLong}}/close",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskIdTooLong}}",
+										"close"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to close a task with invalid task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/-12/close",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"-12",
+										"close"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reopen a task",
+					"item": [
+						{
+							"name": "Reopen a task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 2xx\", function () {\r",
+											"    pm.response.to.be.success;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code is 204\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}/reopen",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}",
+										"reopen"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to reopen a task without authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the empty token response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Empty token\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}/reopen",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}",
+										"reopen"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to reopen a task with invalid authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 403\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.forbidden;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Forbidden\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Forbidden\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{invalidToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}/reopen",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}",
+										"reopen"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to reopen a task with invalid url",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}/re-open",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}",
+										"re-open"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to reopen a task with too long task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Invalid temporary id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Invalid temporary id\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskIdTooLong}}/reopen",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskIdTooLong}}",
+										"reopen"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to reopen a task with invalid task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/-{{taskId}}/reopen",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"-{{taskId}}",
+										"reopen"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to reopen a task with non existing task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Item not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Item not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}123/reopen",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}123",
+										"reopen"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete a task",
+					"item": [
+						{
+							"name": "Delete a task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 2xx\", function () {\r",
+											"    pm.response.to.be.success;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code is 204\", function () {\r",
+											"    pm.response.to.have.status(204);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to delete tasks without authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the empty token response\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Empty token\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to delete tasks with invalid authorization token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 403\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.forbidden;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Forbidden\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Forbidden\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{invalidToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to delete tasks with invalid url",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}invalid/{{taskId}}",
+									"host": [
+										"{{baseURL}}invalid"
+									],
+									"path": [
+										"{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to delete tasks with non existing task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Item not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Item not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskId}}123",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskId}}123"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to delete tasks with too long task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.badRequest;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: Invalid temporary id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"Invalid temporary id\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/{{taskIdTooLong}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"{{taskIdTooLong}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Try to delete tasks with an invalid task id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"///////////////////////\r",
+											"//Test Status Code\r",
+											"///////////////////////\r",
+											"pm.test(\"Status code is 404\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Bad Request status\", function () {\r",
+											"    pm.response.to.be.notFound;\r",
+											"});\r",
+											"\r",
+											"\r",
+											"///////////////////////\r",
+											"//Test Content\r",
+											"///////////////////////\r",
+											"pm.test(\"Validate the response: 404 page not found\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"404 page not found\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/-{{taskId}}",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"-{{taskId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"///////////////////////",
+					"//Test Response time",
+					"///////////////////////",
+					"pm.test(\"Response time is less than 600ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(600);",
+					"});"
+				]
+			}
+		}
+	]
+}
